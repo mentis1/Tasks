@@ -7,9 +7,9 @@
     --color-red: #FF3B30; /* Rojo, aunque no se usará directamente en el botón de eliminar */
     --color-white: #FFFFFF;
     --color-black: #000000;
-    --color-body-bg: #F2F2F7; /* Fondo general de la app (el gris claro de iOS) */
+    --color-body-bg: #FFFFFF; /* **AJUSTE:** Fondo general de la app ahora es blanco */
     --color-border-subtle: #E5E5EA; /* Bordes de inputs */
-    --color-navbar-border: #E5E5EA; /* Borde inferior de la navbar (si lo mantuviéramos) */
+    --color-navbar-border: #E5E5EA; /* Borde inferior de la navbar */
     --color-form-bg: #FFFFFF; /* Fondo del formulario */
 }
 
@@ -22,7 +22,7 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--color-body-bg);
+    background-color: var(--color-body-bg); /* Usa la variable de fondo blanco */
     margin: 0;
     padding: 0;
     display: flex;
@@ -38,7 +38,7 @@ body {
     width: 100%;
     max-width: 414px;
     height: 100vh;
-    background-color: var(--color-body-bg); /* El fondo principal es el gris claro del body */
+    background-color: var(--color-body-bg); /* **AJUSTE:** El fondo del frame también es blanco */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -47,11 +47,11 @@ body {
 /* Barra de navegación (Header) */
 .navbar {
     background-color: var(--color-white);
-    /* **AJUSTE:** Quitar border-bottom para que los bordes redondeados no se vean cortados */
-    /* border-bottom: 0.5px solid var(--color-navbar-border); */ 
+    border-bottom: 0.5px solid var(--color-navbar-border); 
+    border-radius: 0; 
     
-    padding-top: calc(constant(safe-area-inset-top) + 40px);
-    padding-top: calc(env(safe-area-inset-top) + 40px);
+    padding-top: calc(constant(safe-area-inset-top) + 60px); 
+    padding-top: calc(env(safe-area-inset-top) + 60px);
     padding-bottom: 12px;
     padding-left: 24px;
     padding-right: 24px;
@@ -61,10 +61,8 @@ body {
     position: relative;
     z-index: 10;
 
-    /* **AJUSTE:** Márgenes laterales y redondez en la parte inferior */
-    margin: 0 16px 16px 16px; /* Márgenes laterales y un poco abajo */
-    border-radius: 0 0 30px 30px; /* Redondez solo en la parte inferior */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra para que destaque */
+    margin: 0; 
+    box-shadow: none; 
 }
 
 .navbar h1 {
@@ -107,9 +105,8 @@ body {
     overflow: hidden;
     transition: max-height 0.4s ease-out, padding 0.4s ease-out, border-radius 0.4s ease-out;
 
-    /* **AJUSTE:** Redondez de 30px en todas las esquinas para el formulario */
-    margin: 0 16px; /* Márgenes laterales para que "flote" */
-    border-radius: 30px; /* Redondez completa de 30px */
+    margin: 0 16px; 
+    border-radius: 30px; 
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     z-index: 5;
@@ -122,17 +119,17 @@ body {
     max-height: 250px; 
     padding-top: 20px;
     padding-bottom: 20px;
-    border-radius: 30px; /* Mantiene la redondez al expandirse */
+    border-radius: 30px; 
 }
 
 /* Campos de entrada */
 .input-field {
     width: 100%;
-    padding: 14px 16px;
+    padding: 16px; 
     border: 0.5px solid var(--color-border-subtle);
     border-radius: 10px;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400; 
     color: var(--color-black);
     background-color: var(--color-white);
     -webkit-appearance: none;
@@ -141,7 +138,7 @@ body {
 }
 
 .input-field::placeholder {
-    color: var(--color-gray);
+    color: var(--color-gray); 
 }
 
 .input-field:focus {
@@ -178,13 +175,12 @@ body {
     -webkit-overflow-scrolling: touch;
     padding: 0;
     margin: 0;
-    /* Ajuste para que la lista comience después del margen inferior del navbar */
-    /* padding-top: 10px; Removido para que el margin-bottom del navbar se encargue del espacio */
+    padding-top: 10px; 
 }
 
 /* Lista de tareas */
 .task-list {
-    padding: 0 24px; /* Padding lateral para las tarjetas */
+    padding: 0 24px; 
     margin: 0;
     list-style: none;
     display: flex;
@@ -199,7 +195,6 @@ body {
     justify-content: space-between;
     background-color: var(--color-card-bg);
     padding: 20px;
-    /* **AJUSTE:** Redondez de 30px para las tarjetas de tarea */
     border-radius: 30px; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease-in-out;
@@ -234,10 +229,10 @@ body {
 
 /* Botón de eliminación de tarea (Círculo azul con centro blanco) */
 .delete-button {
-    background-color: var(--color-light-blue); /* **AJUSTE:** Color azul claro */
+    background-color: var(--color-light-blue);
     border: none;
-    border-radius: 50%; /* **AJUSTE:** Círculo completo */
-    width: 32px; /* Tamaño del círculo azul */
+    border-radius: 50%;
+    width: 32px;
     height: 32px;
     display: flex;
     align-items: center;
@@ -250,16 +245,16 @@ body {
 }
 
 .delete-button::before {
-    content: ''; /* Contenido para el círculo blanco */
+    content: '';
     display: block;
-    width: 10px; /* **AJUSTE:** Tamaño del círculo blanco interno */
+    width: 10px;
     height: 10px;
     background-color: var(--color-white);
     border-radius: 50%;
 }
 
 .delete-button:active {
-    background-color: #559ee5; /* Azul más oscuro al presionar */
+    background-color: #559ee5;
     transform: scale(0.9);
 }
 
