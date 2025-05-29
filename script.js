@@ -1,7 +1,7 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('taskInput');
 const taskDate = document.getElementById('taskDate');
-const taskTime = document.getElementById('taskTime'); // Referencia al input de hora
+const taskTime = document.getElementById('taskTime'); 
 const saveTaskButton = document.getElementById('saveTaskButton');
 const taskList = document.getElementById('taskList');
 const messageBox = document.getElementById('messageBox');
@@ -64,17 +64,16 @@ function renderTasks() {
     taskList.innerHTML = '';
 
     tasks.sort((a, b) => {
-        // Combina fecha y hora para una comparación de fecha y hora completa
         const dateTimeA = a.date + (a.time ? 'T' + a.time : 'T00:00');
         const dateTimeB = b.date + (b.time ? 'T' + b.time : 'T00:00');
 
-        const dateObjA = a.date ? new Date(dateTimeA) : new Date('9999-12-31T23:59:59'); // Si no hay fecha, al final
+        const dateObjA = a.date ? new Date(dateTimeA) : new Date('9999-12-31T23:59:59'); 
         const dateObjB = b.date ? new Date(dateTimeB) : new Date('9999-12-31T23:59:59');
 
         if (dateObjA.getTime() === dateObjB.getTime()) {
-            return a.id - b.id; // Mantener orden por ID si fechas/horas son iguales
+            return a.id - b.id; 
         }
-        return dateObjA - dateObjB; // Ordenar por fecha y hora
+        return dateObjA - dateObjB; 
     });
 
     tasks.forEach(task => {
@@ -121,7 +120,7 @@ function formatDateTime(dateString, timeString) {
 
     if (timeString) {
         if (output) { 
-            output += ' '; // Añadir espacio si ya hay fecha
+            output += ' '; 
         }
         output += timeString;
     }
@@ -156,9 +155,13 @@ function addTask() {
 
     taskInput.value = '';
     taskDate.value = '';
-    taskTime.value = ''; // Limpiar el campo de hora
-    toggleForm(); // Cerrar el formulario
+    taskTime.value = ''; 
+    toggleForm(); 
     showMessage("Tarea añadida.");
+
+    // **NUEVO:** Asegurar que las clases se apliquen al añadir
+    checkDateTimeInputState(taskDate);
+    checkDateTimeInputState(taskTime);
 }
 
 /**
@@ -188,46 +191,31 @@ function toggleForm() {
         taskInput.value = '';
         taskDate.value = '';
         taskTime.value = ''; 
-        // Asegurarse de que el tipo de date sea 'text' al cerrar si está vacío
-        taskDate.type = 'text'; 
-        taskTime.type = 'text'; // **AJUSTE:** Asegurarse de que el tipo de time sea 'text' al cerrar si está vacío
+        // **NUEVO:** Al cerrar el formulario, asegurar que los inputs vuelvan a su estado "vacío"
+        checkDateTimeInputState(taskDate);
+        checkDateTimeInputState(taskTime);
     }
 }
 
-// Manejo del input de fecha para mostrar placeholder en iOS
-taskDate.addEventListener('focus', () => {
-    taskDate.type = 'date';
-    if (!taskDate.value) {
-        taskDate.style.color = 'var(--color-black)'; 
+// **NUEVO FUNCIÓN:** Para gestionar la clase .empty-date-time
+function checkDateTimeInputState(inputElement) {
+    if (inputElement.value === '') {
+        inputElement.classList.add('empty-date-time');
+    } else {
+        inputElement.classList.remove('empty-date-time');
     }
-});
-
-taskDate.addEventListener('blur', () => {
-    if (!taskDate.value) {
-        taskDate.type = 'text';
-        taskDate.style.color = 'var(--color-gray)'; 
-    }
-});
-
-// **NUEVO:** Manejo del input de hora para mostrar placeholder en iOS
-taskTime.addEventListener('focus', () => {
-    taskTime.type = 'time';
-    if (!taskTime.value) {
-        taskTime.style.color = 'var(--color-black)'; 
-    }
-});
-
-taskTime.addEventListener('blur', () => {
-    if (!taskTime.value) {
-        taskTime.type = 'text';
-        taskTime.style.color = 'var(--color-gray)'; 
-    }
-});
-
+}
 
 // Event Listeners
 saveTaskButton.addEventListener('click', addTask);
 toggleFormButton.addEventListener('click', toggleForm);
+
+// **NUEVO:** Añadir event listeners para cambiar la clase al escribir/seleccionar
+taskDate.addEventListener('change', () => checkDateTimeInputState(taskDate));
+taskDate.addEventListener('input', () => checkDateTimeInputState(taskDate)); // Para asegurarse en tiempo real
+taskTime.addEventListener('change', () => checkDateTimeInputState(taskTime));
+taskTime.addEventListener('input', () => checkDateTimeInputState(taskTime)); // Para asegurarse en tiempo real
+
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
@@ -240,15 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const day = String(today.getDate()).padStart(2, '0');
     taskDate.min = `${year}-${month}-${day}`;
 
-    // Asegurarse de que el input de fecha sea tipo 'text' al cargar si está vacío
-    if (!taskDate.value) {
-        taskDate.type = 'text';
-        taskDate.style.color = 'var(--color-gray)';
-    }
-
-    // **NUEVO:** Asegurarse de que el input de hora sea tipo 'text' al cargar si está vacío
-    if (!taskTime.value) {
-        taskTime.type = 'text';
-        taskTime.style.color = 'var(--color-gray)';
-    }
+    // **NUEVO:** Llamar a la función para establecer el estado inicial de los inputs de fecha/hora
+    checkDateTimeInputState(taskDate);
+    checkDateTimeInputState(taskTime);
 });

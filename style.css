@@ -62,7 +62,7 @@ body {
     z-index: 10;
 
     margin: 0; 
-    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
 }
 
 /* Contenedor del título y logo en la navbar */
@@ -73,7 +73,7 @@ body {
 }
 
 .navbar-logo {
-    height: 34px; 
+    height: 34px; /* O el tamaño que prefieras, como 30px */
     width: auto; 
     margin-right: 8px; 
 }
@@ -112,7 +112,7 @@ body {
     background-color: var(--color-white);
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Mantener el gap entre elementos */
+    gap: 16px; 
     padding: 0 24px;
     max-height: 0;
     overflow: hidden;
@@ -120,7 +120,7 @@ body {
 
     margin: 0 16px; 
     border-radius: 30px; 
-    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 5;
     
@@ -129,8 +129,7 @@ body {
 }
 
 .input-section.expanded-form {
-    /* **AJUSTE:** Aumentamos el max-height para acomodar los 3 inputs + botón */
-    max-height: 350px; /* Aumentado de 250px para dar espacio */
+    max-height: 350px; 
     padding-top: 20px;
     padding-bottom: 20px;
     border-radius: 30px; 
@@ -144,29 +143,44 @@ body {
     border-radius: 10px;
     font-size: 17px;
     font-weight: 400; 
-    color: var(--color-black); 
     background-color: var(--color-white);
     -webkit-appearance: none;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* **AJUSTE CRÍTICO:** Estilo para el placeholder de todos los inputs */
 .input-field::placeholder {
     color: var(--color-gray); 
     font-weight: 400; 
 }
 
-/* Estilos específicos para los inputs de fecha y hora cuando son de tipo 'text' y tienen placeholder */
-.input-field[type="text"][placeholder="Establecer fecha"],
-.input-field[type="text"][placeholder="Establecer hora"] {
-    color: var(--color-gray); 
+/* **NUEVO:** Ocultar el texto por defecto del navegador en inputs de fecha/hora */
+/* y mostrar el color del placeholder cuando la clase .empty-date-time está presente */
+.input-field[type="date"].empty-date-time,
+.input-field[type="time"].empty-date-time {
+    color: transparent; /* Hace transparente el texto de fecha/hora */
 }
 
-/* Estilos para los inputs de fecha y hora cuando tienen un valor seleccionado */
-.input-field[type="date"],
-.input-field[type="time"] {
-    color: var(--color-black); 
+.input-field[type="date"].empty-date-time::placeholder,
+.input-field[type="time"].empty-date-time::placeholder {
+    color: var(--color-gray); /* Asegura el color gris del placeholder cuando vacío */
+    opacity: 1; /* Asegura que el placeholder no esté semitransparente */
 }
+
+/* **NUEVO:** Cuando el input no tiene la clase .empty-date-time (es decir, tiene valor),
+   el color del texto debe ser negro */
+.input-field[type="date"]:not(.empty-date-time),
+.input-field[type="time"]:not(.empty-date-time) {
+    color: var(--color-black) !important; /* Asegura el color negro del texto */
+}
+
+/* Asegurar que el texto se vea negro al enfocar y escribir un valor */
+.input-field[type="date"]:focus,
+.input-field[type="time"]:focus {
+    color: var(--color-black) !important;
+}
+
 
 .input-field:focus {
     outline: none;
@@ -223,7 +237,7 @@ body {
     background-color: var(--color-card-bg);
     padding: 20px;
     border-radius: 30px; 
-    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); 
     transition: transform 0.2s ease-in-out;
 }
 
