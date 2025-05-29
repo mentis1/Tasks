@@ -12,14 +12,14 @@ const taskListWrapper = document.getElementById('taskListWrapper');
 let tasks = [];
 let isFormExpanded = false;
 
-// Datos de ejemplo para mostrar el diseño (opcional - puedes eliminar esta sección)
-const sampleTasks = [
-    { id: 1, text: "Recoger a los niños", date: "2025-05-29" },
-    { id: 2, text: "Comprar pan", date: "2025-05-30" },
-    { id: 3, text: "Entrevista de trabajo", date: "2025-05-31" },
-    { id: 4, text: "Hacer la comida", date: "2025-06-01" },
-    { id: 5, text: "Recoger iPhone", date: "2025-06-02" }
-];
+// **SECCIÓN ELIMINADA:** Datos de ejemplo para mostrar el diseño
+// const sampleTasks = [
+//     { id: 1, text: "Recoger a los niños", date: "2025-05-29" },
+//     { id: 2, text: "Comprar pan", date: "2025-05-30" },
+//     { id: 3, text: "Entrevista de trabajo", date: "2025-05-31" },
+//     { id: 4, text: "Hacer la comida", date: "2025-06-01" },
+//     { id: 5, text: "Recoger iPhone", date: "2025-06-02" }
+// ];
 
 /**
  * Muestra un mensaje temporal en la pantalla.
@@ -53,16 +53,16 @@ function loadTasks() {
         const storedTasks = localStorage.getItem('tasks');
         if (storedTasks) {
             tasks = JSON.parse(storedTasks);
-            renderTasks();
         } else {
-            // Si no hay tareas guardadas, cargar datos de ejemplo
-            tasks = [...sampleTasks];
-            renderTasks();
+            // Si no hay tareas guardadas, simplemente se inicializa el array vacío.
+            // **AJUSTE:** Eliminada la carga de sampleTasks aquí.
+            tasks = []; 
         }
+        renderTasks(); // Renderiza las tareas, ya sean las cargadas o una lista vacía.
     } catch (e) {
         console.error("Error al cargar de localStorage:", e);
         showMessage("Error al cargar tareas. Es posible que los datos estén corruptos.");
-        tasks = [...sampleTasks]; // Cargar datos de ejemplo si hay error
+        tasks = []; // Asegurarse de que el array esté vacío en caso de error grave
         renderTasks();
     }
 }
@@ -95,11 +95,11 @@ function renderTasks() {
         const taskContent = document.createElement('div');
         taskContent.className = 'task-item-content';
 
-        const taskTextSpan = document.createElement('span'); // Changed from div to span but CSS makes it block
+        const taskTextSpan = document.createElement('span');
         taskTextSpan.className = 'task-item-text';
         taskTextSpan.textContent = task.text;
 
-        const taskDateSpan = document.createElement('span'); // Changed from div to span but CSS makes it block
+        const taskDateSpan = document.createElement('span');
         taskDateSpan.className = 'task-item-date';
         taskDateSpan.textContent = task.date ? formatDate(task.date) : 'Sin fecha';
 
