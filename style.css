@@ -129,7 +129,7 @@ body {
 }
 
 .input-section.expanded-form {
-    max-height: 350px; /* Ajusta según sea necesario */
+    max-height: 450px; /* Ajustado para acomodar los nuevos botones */
     padding-top: 20px;
     padding-bottom: 20px;
     border-radius: 30px; 
@@ -161,67 +161,96 @@ body {
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
 
-
-/* **NUEVOS ESTILOS PARA FECHA Y HORA** */
-
-/* Contenedor de los botones de fecha y hora */
+/* Contenedor de botones de fecha y hora */
 .datetime-buttons-container {
     display: flex;
-    gap: 10px; /* Espacio entre los dos botones */
+    gap: 12px;
+    width: 100%;
 }
 
-/* Estilo para los nuevos botones de fecha y hora */
-.datetime-button {
-    flex: 1; /* Para que cada botón ocupe la mitad del espacio disponible */
-    background-color: var(--color-white); /* Fondo blanco */
-    border: 0.5px solid var(--color-border-subtle); /* Borde sutil */
-    border-radius: 10px;
-    padding: 14px 16px; /* Ajusta el padding para que coincida con .input-field */
-    font-size: 17px;
-    font-weight: 400;
-    color: var(--color-gray); /* Color gris para el texto por defecto */
+/* Wrapper para cada input de fecha/hora */
+.datetime-input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+/* Inputs nativos de fecha y hora - posicionados sobre los botones */
+.datetime-native-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centra el contenido horizontalmente */
-    gap: 8px; /* Espacio entre el icono y el texto */
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    z-index: 2;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background: transparent;
+}
+
+/* Estilos específicos para diferentes navegadores */
+.datetime-native-input::-webkit-datetime-edit {
+    opacity: 0;
+}
+
+.datetime-native-input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+    background: transparent;
+}
+
+.datetime-native-input::-webkit-inner-spin-button {
+    opacity: 0;
+}
+
+/* Botones de fecha y hora - debajo de los inputs nativos */
+.datetime-button {
+    width: 100%;
+    padding: 18px 16px;
+    border: 0.5px solid var(--color-border-subtle);
+    border-radius: 10px;
+    background-color: var(--color-white);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     -webkit-appearance: none;
     outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
-.datetime-button:focus,
 .datetime-button:active {
+    background-color: #f8f8f8;
+    transform: scale(0.98);
+}
+
+.datetime-button:focus-within {
     border-color: var(--color-apple-blue);
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
 
-.datetime-button i {
-    font-size: 20px; /* Tamaño del icono */
-    color: var(--color-gray); /* Color del icono */
+.datetime-button-text {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--color-gray);
+    transition: color 0.2s ease;
+    pointer-events: none;
 }
 
-/* Estilo para el texto dentro del botón cuando se selecciona una fecha/hora */
-/* Se maneja con JS añadiendo/quitando una clase en el SPAN */
 .datetime-button.has-value .datetime-button-text {
     color: var(--color-black);
-    font-weight: 500; /* Un poco más de peso para el valor seleccionado */
+    font-weight: 500;
 }
-
-
-/* Clase para ocultar los inputs de fecha y hora pero mantenerlos accesibles */
-.visually-hidden-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-    pointer-events: none; /* Muy importante para que no capturen clicks */
-}
-
 
 /* Botón del formulario */
 .add-task-form-button {
@@ -272,7 +301,7 @@ body {
     background-color: var(--color-card-bg);
     padding: 20px;
     border-radius: 30px; 
-    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); 
     transition: transform 0.2s ease-in-out;
 }
 
@@ -373,4 +402,23 @@ body {
 
 .task-list-wrapper::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos adicionales para mejorar la compatibilidad con iOS/Safari */
+@supports (-webkit-touch-callout: none) {
+    .datetime-native-input {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media (max-width: 375px) {
+    .datetime-buttons-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .datetime-input-wrapper {
+        width: 100%;
+    }
 }

@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default"> 
     <meta name="apple-mobile-web-app-title" content="Tasks">
@@ -33,23 +31,27 @@
             <input type="text" id="taskInput" class="input-field" placeholder="Nueva Tarea">
             
             <div class="datetime-buttons-container">
-                <button id="dateButton" class="datetime-button">
-                    <i class="fas fa-calendar-alt"></i> <span id="dateButtonText">Establecer fecha</span>
-                </button>
-                <button id="timeButton" class="datetime-button">
-                    <i class="fas fa-clock"></i> <span id="timeButtonText">Establecer hora</span>
-                </button>
+                <div class="datetime-input-wrapper">
+                    <input type="date" id="taskDate" class="datetime-native-input">
+                    <button type="button" id="dateButton" class="datetime-button">
+                        <span id="dateButtonText" class="datetime-button-text">Establecer fecha</span>
+                    </button>
+                </div>
+                
+                <div class="datetime-input-wrapper">
+                    <input type="time" id="taskTime" class="datetime-native-input">
+                    <button type="button" id="timeButton" class="datetime-button">
+                        <span id="timeButtonText" class="datetime-button-text">Establecer hora</span>
+                    </button>
+                </div>
             </div>
-
-            <input type="date" id="taskDate" class="input-field visually-hidden-input"> 
-            <input type="time" id="taskTime" class="input-field visually-hidden-input">
             
             <button id="saveTaskButton" class="add-task-form-button">Añadir Tarea</button>
         </section>
 
         <div id="taskListWrapper" class="task-list-wrapper">
             <ul id="taskList" class="task-list">
-                </ul>
+            </ul>
         </div>
 
         <div id="messageBox" class="message-box"></div>

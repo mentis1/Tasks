@@ -1,20 +1,17 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('taskInput');
-const taskDate = document.getElementById('taskDate'); // Input de fecha oculto
-const taskTime = document.getElementById('taskTime'); // Input de hora oculto
+const taskDate = document.getElementById('taskDate');
+const taskTime = document.getElementById('taskTime');
 const saveTaskButton = document.getElementById('saveTaskButton');
 const taskList = document.getElementById('taskList');
 const messageBox = document.getElementById('messageBox');
 const toggleFormButton = document.getElementById('toggleFormButton');
 const taskFormContainer = document.getElementById('taskFormContainer');
 const taskListWrapper = document.getElementById('taskListWrapper');
-
-// Nuevas referencias a los botones de fecha y hora y sus textos
 const dateButton = document.getElementById('dateButton');
 const timeButton = document.getElementById('timeButton');
 const dateButtonText = document.getElementById('dateButtonText');
 const timeButtonText = document.getElementById('timeButtonText');
-
 
 // Array para almacenar las tareas
 let tasks = [];
@@ -65,11 +62,70 @@ function loadTasks() {
 }
 
 /**
- * Renderiza las tareas en la lista, ordenadas por fecha y luego por hora.
+ * Actualiza el texto de un botón de fecha/hora basado en si tiene valor o no.
+ */
+function updateDateTimeButtonText(button, textElement, value, defaultText) {
+    if (value) {
+        button.classList.add('has-value');
+        if (defaultText.includes('fecha')) {
+            const date = new Date(value + 'T00:00:00');
+            textElement.textContent = date.toLocaleDateString('es-ES', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        } else {
+            // Para la hora, mostrar en formato 12 horas si es posible
+            const [hours, minutes] = value.split(':');
+            const hour24 = parseInt(hours);
+            const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+            const period = hour24 >= 12 ? 'PM' : 'AM';
+            textElement.textContent = `${hour12}:${minutes} ${period}`;
+        }
+    } else {
+        button.classList.remove('has-value');
+        textElement.textContent = defaultText;
+    }
+}
+
+/**
+ * Formatea la fecha y hora para mostrar en la tarea.
+ */
+function formatDateTime(dateString, timeString) {
+    if (!dateString && !timeString) {
+        return 'Sin fecha/hora';
+    }
+
+    let result = '';
+    
+    if (dateString) {
+        const date = new Date(dateString + 'T00:00:00');
+        result += date.toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
+    
+    if (timeString) {
+        if (result) result += ' a las ';
+        const [hours, minutes] = timeString.split(':');
+        const hour24 = parseInt(hours);
+        const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+        const period = hour24 >= 12 ? 'PM' : 'AM';
+        result += `${hour12}:${minutes} ${period}`;
+    }
+    
+    return result || 'Sin fecha/hora';
+}
+
+/**
+ * Renderiza las tareas en la lista ordenadas por fecha/hora.
  */
 function renderTasks() {
     taskList.innerHTML = '';
 
+    // Ordenar las tareas por fecha y hora (más próximas primero)
     tasks.sort((a, b) => {
         const dateTimeA = a.date + (a.time ? 'T' + a.time : 'T00:00');
         const dateTimeB = b.date + (b.time ? 'T' + b.time : 'T00:00');
@@ -113,36 +169,12 @@ function renderTasks() {
 }
 
 /**
- * Formatea una fecha y hora.
- * @param {string} dateString - La fecha en formato 'YYYY-MM-DD'.
- * @param {string} timeString - La hora en formato 'HH:MM'.
- * @returns {string} La fecha y/o hora formateada.
- */
-function formatDateTime(dateString, timeString) {
-    let output = '';
-    if (dateString) {
-        const [year, month, day] = dateString.split('-');
-        output += `${day}/${month}/${year}`;
-    }
-
-    if (timeString) {
-        if (output) { 
-            output += ' '; 
-        }
-        output += timeString;
-    }
-
-    return output || 'Sin fecha/hora'; 
-}
-
-
-/**
  * Añade una nueva tarea a la lista.
  */
 function addTask() {
     const text = taskInput.value.trim();
-    const date = taskDate.value; // Obtener valor del input oculto
-    const time = taskTime.value; // Obtener valor del input oculto
+    const date = taskDate.value; 
+    const time = taskTime.value;
 
     if (text === '') {
         showMessage("Por favor, introduce una tarea.");
@@ -153,7 +185,7 @@ function addTask() {
         id: Date.now(),
         text: text,
         date: date,
-        time: time 
+        time: time
     };
 
     tasks.push(newTask);
@@ -161,13 +193,13 @@ function addTask() {
     renderTasks();
 
     taskInput.value = '';
-    taskDate.value = ''; // Limpiar input oculto
-    taskTime.value = ''; // Limpiar input oculto
+    taskDate.value = ''; 
+    taskTime.value = ''; 
     
-    // Resetear textos de los botones al añadir la tarea
-    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
-    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
-
+    // Actualizar textos de botones
+    updateDateTimeButtonText(dateButton, dateButtonText, '', 'Establecer fecha');
+    updateDateTimeButtonText(timeButton, timeButtonText, '', 'Establecer hora');
+    
     toggleForm(); 
     showMessage("Tarea añadida.");
 }
@@ -197,52 +229,33 @@ function toggleForm() {
         taskFormContainer.classList.remove('expanded-form');
         taskFormContainer.classList.add('hidden-form');
         taskInput.value = '';
-        taskDate.value = ''; // Limpiar input oculto
-        taskTime.value = ''; // Limpiar input oculto
-        // Resetear textos de los botones al cerrar el formulario
-        updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
-        updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
+        taskDate.value = ''; 
+        taskTime.value = ''; 
+        
+        // Resetear textos de botones
+        updateDateTimeButtonText(dateButton, dateButtonText, '', 'Establecer fecha');
+        updateDateTimeButtonText(timeButton, timeButtonText, '', 'Establecer hora');
     }
 }
-
-/**
- * Actualiza el texto de un botón de fecha/hora.
- * @param {HTMLElement} buttonElement - El elemento del botón (dateButton/timeButton).
- * @param {HTMLElement} textElement - El elemento span que contiene el texto (dateButtonText/timeButtonText).
- * @param {string} value - El valor actual del input (fecha o hora).
- * @param {string} defaultText - El texto predeterminado si el valor está vacío.
- */
-function updateDateTimeButtonText(buttonElement, textElement, value, defaultText) {
-    if (value) {
-        if (buttonElement.id === 'dateButton') {
-            const [year, month, day] = value.split('-');
-            textElement.textContent = `${day}/${month}/${year}`;
-        } else if (buttonElement.id === 'timeButton') {
-            textElement.textContent = value;
-        }
-        buttonElement.classList.add('has-value');
-    } else {
-        textElement.textContent = defaultText;
-        buttonElement.classList.remove('has-value');
-    }
-}
-
 
 // Event Listeners
 saveTaskButton.addEventListener('click', addTask);
 toggleFormButton.addEventListener('click', toggleForm);
 
-// Listener para el botón de fecha: activa el input de fecha oculto
-dateButton.addEventListener('click', () => {
-    taskDate.showPicker(); // Esto abre el selector de fecha nativo
+// Event listeners para los botones - activan los inputs nativos
+dateButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    taskDate.focus();
+    taskDate.click();
 });
 
-// Listener para el botón de hora: activa el input de hora oculto
-timeButton.addEventListener('click', () => {
-    taskTime.showPicker(); // Esto abre el selector de hora nativo
+timeButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    taskTime.focus();
+    taskTime.click();
 });
 
-// Listeners para los inputs ocultos: actualizan el texto del botón cuando cambia su valor
+// Event listeners para cuando cambian los valores - se guardan automáticamente
 taskDate.addEventListener('change', () => {
     updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
 });
@@ -251,19 +264,36 @@ taskTime.addEventListener('change', () => {
     updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
 });
 
+// Event listeners adicionales para iOS/Safari
+taskDate.addEventListener('input', () => {
+    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+});
+
+taskTime.addEventListener('input', () => {
+    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
+});
+
+// Para compatibilidad con iOS, también escuchar eventos de blur
+taskDate.addEventListener('blur', () => {
+    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+});
+
+taskTime.addEventListener('blur', () => {
+    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
+});
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
     
-    // Establecer la fecha mínima para el input de fecha (hoy)
+    // Establecer fecha mínima como hoy
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     taskDate.min = `${year}-${month}-${day}`;
 
-    // Inicializar el texto de los botones al cargar
+    // Inicializar textos de botones
     updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
     updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
 });
