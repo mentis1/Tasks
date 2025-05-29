@@ -1,13 +1,20 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('taskInput');
-const taskDate = document.getElementById('taskDate');
-const taskTime = document.getElementById('taskTime'); 
+const taskDate = document.getElementById('taskDate'); // Input de fecha oculto
+const taskTime = document.getElementById('taskTime'); // Input de hora oculto
 const saveTaskButton = document.getElementById('saveTaskButton');
 const taskList = document.getElementById('taskList');
 const messageBox = document.getElementById('messageBox');
 const toggleFormButton = document.getElementById('toggleFormButton');
 const taskFormContainer = document.getElementById('taskFormContainer');
 const taskListWrapper = document.getElementById('taskListWrapper');
+
+// Nuevas referencias a los botones de fecha y hora y sus textos
+const dateButton = document.getElementById('dateButton');
+const timeButton = document.getElementById('timeButton');
+const dateButtonText = document.getElementById('dateButtonText');
+const timeButtonText = document.getElementById('timeButtonText');
+
 
 // Array para almacenar las tareas
 let tasks = [];
@@ -134,8 +141,8 @@ function formatDateTime(dateString, timeString) {
  */
 function addTask() {
     const text = taskInput.value.trim();
-    const date = taskDate.value;
-    const time = taskTime.value;
+    const date = taskDate.value; // Obtener valor del input oculto
+    const time = taskTime.value; // Obtener valor del input oculto
 
     if (text === '') {
         showMessage("Por favor, introduce una tarea.");
@@ -154,14 +161,15 @@ function addTask() {
     renderTasks();
 
     taskInput.value = '';
-    taskDate.value = '';
-    taskTime.value = ''; 
+    taskDate.value = ''; // Limpiar input oculto
+    taskTime.value = ''; // Limpiar input oculto
+    
+    // Resetear textos de los botones al añadir la tarea
+    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
+
     toggleForm(); 
     showMessage("Tarea añadida.");
-
-    // **NUEVO:** Asegurar que las clases se apliquen al añadir
-    checkDateTimeInputState(taskDate);
-    checkDateTimeInputState(taskTime);
 }
 
 /**
@@ -189,32 +197,59 @@ function toggleForm() {
         taskFormContainer.classList.remove('expanded-form');
         taskFormContainer.classList.add('hidden-form');
         taskInput.value = '';
-        taskDate.value = '';
-        taskTime.value = ''; 
-        // **NUEVO:** Al cerrar el formulario, asegurar que los inputs vuelvan a su estado "vacío"
-        checkDateTimeInputState(taskDate);
-        checkDateTimeInputState(taskTime);
+        taskDate.value = ''; // Limpiar input oculto
+        taskTime.value = ''; // Limpiar input oculto
+        // Resetear textos de los botones al cerrar el formulario
+        updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+        updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
     }
 }
 
-// **NUEVO FUNCIÓN:** Para gestionar la clase .empty-date-time
-function checkDateTimeInputState(inputElement) {
-    if (inputElement.value === '') {
-        inputElement.classList.add('empty-date-time');
+/**
+ * Actualiza el texto de un botón de fecha/hora.
+ * @param {HTMLElement} buttonElement - El elemento del botón (dateButton/timeButton).
+ * @param {HTMLElement} textElement - El elemento span que contiene el texto (dateButtonText/timeButtonText).
+ * @param {string} value - El valor actual del input (fecha o hora).
+ * @param {string} defaultText - El texto predeterminado si el valor está vacío.
+ */
+function updateDateTimeButtonText(buttonElement, textElement, value, defaultText) {
+    if (value) {
+        if (buttonElement.id === 'dateButton') {
+            const [year, month, day] = value.split('-');
+            textElement.textContent = `${day}/${month}/${year}`;
+        } else if (buttonElement.id === 'timeButton') {
+            textElement.textContent = value;
+        }
+        buttonElement.classList.add('has-value');
     } else {
-        inputElement.classList.remove('empty-date-time');
+        textElement.textContent = defaultText;
+        buttonElement.classList.remove('has-value');
     }
 }
+
 
 // Event Listeners
 saveTaskButton.addEventListener('click', addTask);
 toggleFormButton.addEventListener('click', toggleForm);
 
-// **NUEVO:** Añadir event listeners para cambiar la clase al escribir/seleccionar
-taskDate.addEventListener('change', () => checkDateTimeInputState(taskDate));
-taskDate.addEventListener('input', () => checkDateTimeInputState(taskDate)); // Para asegurarse en tiempo real
-taskTime.addEventListener('change', () => checkDateTimeInputState(taskTime));
-taskTime.addEventListener('input', () => checkDateTimeInputState(taskTime)); // Para asegurarse en tiempo real
+// Listener para el botón de fecha: activa el input de fecha oculto
+dateButton.addEventListener('click', () => {
+    taskDate.showPicker(); // Esto abre el selector de fecha nativo
+});
+
+// Listener para el botón de hora: activa el input de hora oculto
+timeButton.addEventListener('click', () => {
+    taskTime.showPicker(); // Esto abre el selector de hora nativo
+});
+
+// Listeners para los inputs ocultos: actualizan el texto del botón cuando cambia su valor
+taskDate.addEventListener('change', () => {
+    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+});
+
+taskTime.addEventListener('change', () => {
+    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
+});
 
 
 // Inicialización al cargar la página
@@ -228,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const day = String(today.getDate()).padStart(2, '0');
     taskDate.min = `${year}-${month}-${day}`;
 
-    // **NUEVO:** Llamar a la función para establecer el estado inicial de los inputs de fecha/hora
-    checkDateTimeInputState(taskDate);
-    checkDateTimeInputState(taskTime);
+    // Inicializar el texto de los botones al cargar
+    updateDateTimeButtonText(dateButton, dateButtonText, taskDate.value, 'Establecer fecha');
+    updateDateTimeButtonText(timeButton, timeButtonText, taskTime.value, 'Establecer hora');
 });

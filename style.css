@@ -73,7 +73,7 @@ body {
 }
 
 .navbar-logo {
-    height: 34px; /* O el tamaño que prefieras, como 30px */
+    height: 34px; 
     width: auto; 
     margin-right: 8px; 
 }
@@ -129,13 +129,13 @@ body {
 }
 
 .input-section.expanded-form {
-    max-height: 350px; 
+    max-height: 350px; /* Ajusta según sea necesario */
     padding-top: 20px;
     padding-bottom: 20px;
     border-radius: 30px; 
 }
 
-/* Campos de entrada */
+/* Campos de entrada normales (como el de texto de la tarea) */
 .input-field {
     width: 100%;
     padding: 18px 16px; 
@@ -143,50 +143,85 @@ body {
     border-radius: 10px;
     font-size: 17px;
     font-weight: 400; 
+    color: var(--color-black); 
     background-color: var(--color-white);
     -webkit-appearance: none;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* **AJUSTE CRÍTICO:** Estilo para el placeholder de todos los inputs */
 .input-field::placeholder {
     color: var(--color-gray); 
     font-weight: 400; 
 }
-
-/* **NUEVO:** Ocultar el texto por defecto del navegador en inputs de fecha/hora */
-/* y mostrar el color del placeholder cuando la clase .empty-date-time está presente */
-.input-field[type="date"].empty-date-time,
-.input-field[type="time"].empty-date-time {
-    color: transparent; /* Hace transparente el texto de fecha/hora */
-}
-
-.input-field[type="date"].empty-date-time::placeholder,
-.input-field[type="time"].empty-date-time::placeholder {
-    color: var(--color-gray); /* Asegura el color gris del placeholder cuando vacío */
-    opacity: 1; /* Asegura que el placeholder no esté semitransparente */
-}
-
-/* **NUEVO:** Cuando el input no tiene la clase .empty-date-time (es decir, tiene valor),
-   el color del texto debe ser negro */
-.input-field[type="date"]:not(.empty-date-time),
-.input-field[type="time"]:not(.empty-date-time) {
-    color: var(--color-black) !important; /* Asegura el color negro del texto */
-}
-
-/* Asegurar que el texto se vea negro al enfocar y escribir un valor */
-.input-field[type="date"]:focus,
-.input-field[type="time"]:focus {
-    color: var(--color-black) !important;
-}
-
 
 .input-field:focus {
     outline: none;
     border-color: var(--color-apple-blue);
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
+
+
+/* **NUEVOS ESTILOS PARA FECHA Y HORA** */
+
+/* Contenedor de los botones de fecha y hora */
+.datetime-buttons-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los dos botones */
+}
+
+/* Estilo para los nuevos botones de fecha y hora */
+.datetime-button {
+    flex: 1; /* Para que cada botón ocupe la mitad del espacio disponible */
+    background-color: var(--color-white); /* Fondo blanco */
+    border: 0.5px solid var(--color-border-subtle); /* Borde sutil */
+    border-radius: 10px;
+    padding: 14px 16px; /* Ajusta el padding para que coincida con .input-field */
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--color-gray); /* Color gris para el texto por defecto */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    gap: 8px; /* Espacio entre el icono y el texto */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+.datetime-button:focus,
+.datetime-button:active {
+    border-color: var(--color-apple-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.datetime-button i {
+    font-size: 20px; /* Tamaño del icono */
+    color: var(--color-gray); /* Color del icono */
+}
+
+/* Estilo para el texto dentro del botón cuando se selecciona una fecha/hora */
+/* Se maneja con JS añadiendo/quitando una clase en el SPAN */
+.datetime-button.has-value .datetime-button-text {
+    color: var(--color-black);
+    font-weight: 500; /* Un poco más de peso para el valor seleccionado */
+}
+
+
+/* Clase para ocultar los inputs de fecha y hora pero mantenerlos accesibles */
+.visually-hidden-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    pointer-events: none; /* Muy importante para que no capturen clicks */
+}
+
 
 /* Botón del formulario */
 .add-task-form-button {
@@ -237,7 +272,7 @@ body {
     background-color: var(--color-card-bg);
     padding: 20px;
     border-radius: 30px; 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.08); 
     transition: transform 0.2s ease-in-out;
 }
 
