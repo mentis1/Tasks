@@ -50,8 +50,8 @@ body {
     border-bottom: 0.5px solid var(--color-navbar-border); 
     border-radius: 0; 
     
-    padding-top: calc(constant(safe-area-inset-top) + 40px); 
-    padding-top: calc(env(safe-area-inset-top) + 40px);
+    padding-top: calc(constant(safe-area-inset-top) + 20px); 
+    padding-top: calc(env(safe-area-inset-top) + 20px);
     padding-bottom: 12px;
     padding-left: 24px;
     padding-right: 24px;
