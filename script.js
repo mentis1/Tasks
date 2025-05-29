@@ -1,6 +1,7 @@
 // Referencias a elementos del DOM
 const taskInput = document.getElementById('taskInput');
 const taskDate = document.getElementById('taskDate');
+const taskTime = document.getElementById('taskTime'); // Referencia al input de hora
 const saveTaskButton = document.getElementById('saveTaskButton');
 const taskList = document.getElementById('taskList');
 const messageBox = document.getElementById('messageBox');
@@ -11,15 +12,6 @@ const taskListWrapper = document.getElementById('taskListWrapper');
 // Array para almacenar las tareas
 let tasks = [];
 let isFormExpanded = false;
-
-// **SECCIÓN ELIMINADA:** Datos de ejemplo para mostrar el diseño
-// const sampleTasks = [
-//     { id: 1, text: "Recoger a los niños", date: "2025-05-29" },
-//     { id: 2, text: "Comprar pan", date: "2025-05-30" },
-//     { id: 3, text: "Entrevista de trabajo", date: "2025-05-31" },
-//     { id: 4, text: "Hacer la comida", date: "2025-06-01" },
-//     { id: 5, text: "Recoger iPhone", date: "2025-06-02" }
-// ];
 
 /**
  * Muestra un mensaje temporal en la pantalla.
@@ -54,39 +46,37 @@ function loadTasks() {
         if (storedTasks) {
             tasks = JSON.parse(storedTasks);
         } else {
-            // Si no hay tareas guardadas, simplemente se inicializa el array vacío.
-            // **AJUSTE:** Eliminada la carga de sampleTasks aquí.
             tasks = []; 
         }
-        renderTasks(); // Renderiza las tareas, ya sean las cargadas o una lista vacía.
+        renderTasks();
     } catch (e) {
         console.error("Error al cargar de localStorage:", e);
         showMessage("Error al cargar tareas. Es posible que los datos estén corruptos.");
-        tasks = []; // Asegurarse de que el array esté vacío en caso de error grave
+        tasks = []; 
         renderTasks();
     }
 }
 
 /**
- * Renderiza las tareas en la lista, ordenadas por fecha.
+ * Renderiza las tareas en la lista, ordenadas por fecha y luego por hora.
  */
 function renderTasks() {
-    // Limpiar la lista actual
     taskList.innerHTML = '';
 
-    // Ordenar tareas: las más próximas primero, luego por orden de creación si las fechas son iguales.
-    // Las tareas sin fecha van al final.
     tasks.sort((a, b) => {
-        const dateA = a.date ? new Date(a.date) : new Date('9999-12-31');
-        const dateB = b.date ? new Date(b.date) : new Date('9999-12-31');
+        // Combina fecha y hora para una comparación de fecha y hora completa
+        const dateTimeA = a.date + (a.time ? 'T' + a.time : 'T00:00');
+        const dateTimeB = b.date + (b.time ? 'T' + b.time : 'T00:00');
 
-        if (dateA.getTime() === dateB.getTime()) {
-            return a.id - b.id;
+        const dateObjA = a.date ? new Date(dateTimeA) : new Date('9999-12-31T23:59:59'); // Si no hay fecha, al final
+        const dateObjB = b.date ? new Date(dateTimeB) : new Date('9999-12-31T23:59:59');
+
+        if (dateObjA.getTime() === dateObjB.getTime()) {
+            return a.id - b.id; // Mantener orden por ID si fechas/horas son iguales
         }
-        return dateA - dateB;
+        return dateObjA - dateObjB; // Ordenar por fecha y hora
     });
 
-    // Crear elementos de lista para cada tarea
     tasks.forEach(task => {
         const listItem = document.createElement('li');
         listItem.className = 'task-item';
@@ -99,12 +89,12 @@ function renderTasks() {
         taskTextSpan.className = 'task-item-text';
         taskTextSpan.textContent = task.text;
 
-        const taskDateSpan = document.createElement('span');
-        taskDateSpan.className = 'task-item-date';
-        taskDateSpan.textContent = task.date ? formatDate(task.date) : 'Sin fecha';
+        const taskDateTimeSpan = document.createElement('span');
+        taskDateTimeSpan.className = 'task-item-date'; 
+        taskDateTimeSpan.textContent = formatDateTime(task.date, task.time);
 
         taskContent.appendChild(taskTextSpan);
-        taskContent.appendChild(taskDateSpan);
+        taskContent.appendChild(taskDateTimeSpan);
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-button';
@@ -117,15 +107,28 @@ function renderTasks() {
 }
 
 /**
- * Formatea una fecha de 'YYYY-MM-DD' a 'DD/MM/YYYY'.
+ * Formatea una fecha y hora.
  * @param {string} dateString - La fecha en formato 'YYYY-MM-DD'.
- * @returns {string} La fecha formateada.
+ * @param {string} timeString - La hora en formato 'HH:MM'.
+ * @returns {string} La fecha y/o hora formateada.
  */
-function formatDate(dateString) {
-    if (!dateString) return '';
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
+function formatDateTime(dateString, timeString) {
+    let output = '';
+    if (dateString) {
+        const [year, month, day] = dateString.split('-');
+        output += `${day}/${month}/${year}`;
+    }
+
+    if (timeString) {
+        if (output) { 
+            output += ' '; // Añadir espacio si ya hay fecha
+        }
+        output += timeString;
+    }
+
+    return output || 'Sin fecha/hora'; 
 }
+
 
 /**
  * Añade una nueva tarea a la lista.
@@ -133,27 +136,28 @@ function formatDate(dateString) {
 function addTask() {
     const text = taskInput.value.trim();
     const date = taskDate.value;
+    const time = taskTime.value;
 
     if (text === '') {
         showMessage("Por favor, introduce una tarea.");
         return;
     }
 
-    // Crea un ID único para la tarea
     const newTask = {
         id: Date.now(),
         text: text,
-        date: date
+        date: date,
+        time: time 
     };
 
     tasks.push(newTask);
     saveTasks();
     renderTasks();
 
-    // Limpia los campos de entrada y oculta el formulario
     taskInput.value = '';
     taskDate.value = '';
-    toggleForm();
+    taskTime.value = ''; // Limpiar el campo de hora
+    toggleForm(); // Cerrar el formulario
     showMessage("Tarea añadida.");
 }
 
@@ -183,8 +187,43 @@ function toggleForm() {
         taskFormContainer.classList.add('hidden-form');
         taskInput.value = '';
         taskDate.value = '';
+        taskTime.value = ''; 
+        // Asegurarse de que el tipo de date sea 'text' al cerrar si está vacío
+        taskDate.type = 'text'; 
+        taskTime.type = 'text'; // **AJUSTE:** Asegurarse de que el tipo de time sea 'text' al cerrar si está vacío
     }
 }
+
+// Manejo del input de fecha para mostrar placeholder en iOS
+taskDate.addEventListener('focus', () => {
+    taskDate.type = 'date';
+    if (!taskDate.value) {
+        taskDate.style.color = 'var(--color-black)'; 
+    }
+});
+
+taskDate.addEventListener('blur', () => {
+    if (!taskDate.value) {
+        taskDate.type = 'text';
+        taskDate.style.color = 'var(--color-gray)'; 
+    }
+});
+
+// **NUEVO:** Manejo del input de hora para mostrar placeholder en iOS
+taskTime.addEventListener('focus', () => {
+    taskTime.type = 'time';
+    if (!taskTime.value) {
+        taskTime.style.color = 'var(--color-black)'; 
+    }
+});
+
+taskTime.addEventListener('blur', () => {
+    if (!taskTime.value) {
+        taskTime.type = 'text';
+        taskTime.style.color = 'var(--color-gray)'; 
+    }
+});
+
 
 // Event Listeners
 saveTaskButton.addEventListener('click', addTask);
@@ -200,4 +239,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     taskDate.min = `${year}-${month}-${day}`;
+
+    // Asegurarse de que el input de fecha sea tipo 'text' al cargar si está vacío
+    if (!taskDate.value) {
+        taskDate.type = 'text';
+        taskDate.style.color = 'var(--color-gray)';
+    }
+
+    // **NUEVO:** Asegurarse de que el input de hora sea tipo 'text' al cargar si está vacío
+    if (!taskTime.value) {
+        taskTime.type = 'text';
+        taskTime.style.color = 'var(--color-gray)';
+    }
 });
