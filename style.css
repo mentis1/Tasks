@@ -1,0 +1,305 @@
+/* Variables de color actualizadas */
+:root {
+    --color-gray: #8E8E93; /* Texto secundario */
+    --color-light-blue: #6DB3FF; /* Azul claro para el botón de eliminar (el círculo) */
+    --color-apple-blue: #007AFF; /* Botones principales */
+    --color-card-bg: #FFFFFF; /* Fondo de tarjetas */
+    --color-red: #FF3B30; /* Rojo, aunque no se usará directamente en el botón de eliminar */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-body-bg: #F2F2F7; /* Fondo general de la app (el gris claro de iOS) */
+    --color-border-subtle: #E5E5EA; /* Bordes de inputs */
+    --color-navbar-border: #E5E5EA; /* Borde inferior de la navbar (si lo mantuviéramos) */
+    --color-form-bg: #FFFFFF; /* Fondo del formulario */
+}
+
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-body-bg);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    /* Ajustes para la "safe area" de iOS */
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Contenedor principal */
+.iphone-frame {
+    width: 100%;
+    max-width: 414px;
+    height: 100vh;
+    background-color: var(--color-body-bg); /* El fondo principal es el gris claro del body */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Barra de navegación (Header) */
+.navbar {
+    background-color: var(--color-white);
+    /* **AJUSTE:** Quitar border-bottom para que los bordes redondeados no se vean cortados */
+    /* border-bottom: 0.5px solid var(--color-navbar-border); */ 
+    
+    padding-top: calc(constant(safe-area-inset-top) + 40px);
+    padding-top: calc(env(safe-area-inset-top) + 40px);
+    padding-bottom: 12px;
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 10;
+
+    /* **AJUSTE:** Márgenes laterales y redondez en la parte inferior */
+    margin: 0 16px 16px 16px; /* Márgenes laterales y un poco abajo */
+    border-radius: 0 0 30px 30px; /* Redondez solo en la parte inferior */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra para que destaque */
+}
+
+.navbar h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--color-black);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Botón Añadir */
+.add-icon-button {
+    background-color: var(--color-apple-blue);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-white);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    -webkit-appearance: none;
+    outline: none;
+    margin-bottom: 3px;
+}
+
+.add-icon-button:active {
+    background-color: #005bb5;
+    transform: scale(0.98);
+}
+
+/* Sección del formulario (desplegable) */
+.input-section {
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out, border-radius 0.4s ease-out;
+
+    /* **AJUSTE:** Redondez de 30px en todas las esquinas para el formulario */
+    margin: 0 16px; /* Márgenes laterales para que "flote" */
+    border-radius: 30px; /* Redondez completa de 30px */
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    z-index: 5;
+    
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.input-section.expanded-form {
+    max-height: 250px; 
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 30px; /* Mantiene la redondez al expandirse */
+}
+
+/* Campos de entrada */
+.input-field {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0.5px solid var(--color-border-subtle);
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--color-black);
+    background-color: var(--color-white);
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+    color: var(--color-gray);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--color-apple-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* Botón del formulario */
+.add-task-form-button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-apple-blue);
+    color: var(--color-white);
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    -webkit-appearance: none;
+    margin-top: 4px;
+}
+
+.add-task-form-button:active {
+    background-color: #005bb5;
+    transform: scale(0.98);
+}
+
+/* Contenedor de la lista */
+.task-list-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
+    margin: 0;
+    /* Ajuste para que la lista comience después del margen inferior del navbar */
+    /* padding-top: 10px; Removido para que el margin-bottom del navbar se encargue del espacio */
+}
+
+/* Lista de tareas */
+.task-list {
+    padding: 0 24px; /* Padding lateral para las tarjetas */
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Tarjeta de tarea */
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-card-bg);
+    padding: 20px;
+    /* **AJUSTE:** Redondez de 30px para las tarjetas de tarea */
+    border-radius: 30px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out;
+}
+
+.task-item:active {
+    transform: scale(0.98);
+}
+
+.task-item-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+}
+
+.task-item-text {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--color-black);
+    margin: 0;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.task-item-date {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--color-gray);
+    margin-top: 4px;
+}
+
+/* Botón de eliminación de tarea (Círculo azul con centro blanco) */
+.delete-button {
+    background-color: var(--color-light-blue); /* **AJUSTE:** Color azul claro */
+    border: none;
+    border-radius: 50%; /* **AJUSTE:** Círculo completo */
+    width: 32px; /* Tamaño del círculo azul */
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    flex-shrink: 0;
+    -webkit-appearance: none;
+}
+
+.delete-button::before {
+    content: ''; /* Contenido para el círculo blanco */
+    display: block;
+    width: 10px; /* **AJUSTE:** Tamaño del círculo blanco interno */
+    height: 10px;
+    background-color: var(--color-white);
+    border-radius: 50%;
+}
+
+.delete-button:active {
+    background-color: #559ee5; /* Azul más oscuro al presionar */
+    transform: scale(0.9);
+}
+
+/* Cuadro de mensaje temporal */
+.message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--color-white);
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.message-box.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Scrollbar personalizada para webkit (para navegador, no se ve en iOS nativo) */
+.task-list-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.task-list-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.task-list-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+.task-list-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
