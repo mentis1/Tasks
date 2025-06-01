@@ -7,7 +7,7 @@
     --color-red: #FF3B30; /* Rojo, aunque no se usará directamente en el botón de eliminar */
     --color-white: #FFFFFF;
     --color-black: #000000;
-    --color-body-bg: #FFFFFF; /* Fondo general de la app de nuevo a blanco */
+    --color-body-bg: #ffffff; /* Fondo general de la app de nuevo a blanco */
     --color-border-subtle: #E5E5EA; /* Bordes de inputs */
     --color-navbar-border: #E5E5EA; /* Borde inferior de la navbar */
     --color-form-bg: #FFFFFF; /* Fondo del formulario */
@@ -53,8 +53,8 @@ body {
     padding-top: calc(constant(safe-area-inset-top) + 20px); 
     padding-top: calc(env(safe-area-inset-top) + 20px);
     padding-bottom: 12px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 30px;
+    padding-right: 30px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -352,10 +352,10 @@ body {
 .delete-button::before {
     content: '';
     display: block;
-    width: 12px; 
-    height: 12px;
+    width: 30px; 
+    height: 25px;
     background-color: var(--color-white);
-    border-radius: 50%;
+    border-radius: 100%;
 }
 
 .delete-button:active {
