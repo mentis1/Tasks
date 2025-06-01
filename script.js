@@ -160,6 +160,7 @@ function renderTasks() {
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-button';
+        // Se ha quitado la línea: deleteButton.innerHTML = `<svg>...</svg>`;
         deleteButton.addEventListener('click', () => deleteTask(task.id));
 
         listItem.appendChild(taskContent);

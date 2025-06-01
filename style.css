@@ -1,19 +1,36 @@
-/* Variables de color actualizadas para Modo Oscuro */
+/* Variables de color - Modo Claro (por defecto) */
 :root {
-    --color-gray: #A9A9AE; /* Texto secundario más claro para contraste */
+    --color-gray: #8E8E93; /* Texto secundario */
     --color-light-blue: #6DB3FF; /* No longer used for delete button */
-    --color-apple-blue: #0A84FF; /* Azul de Apple más vibrante para modo oscuro */
-    --color-card-bg: #1C1C1E; /* Fondo de tarjetas oscuro */
-    --color-red: #FF453A; /* Rojo vibrante para modo oscuro (para el botón de eliminar) */
-    --color-white: #FFFFFF; /* Sigue siendo blanco para algunos textos/iconos */
-    --color-black: #000000; /* No se usará directamente, pero útil para referencias */
-    --color-body-bg: #000000; /* Fondo general de la app negro */
-    --color-border-subtle: #3A3A3C; /* Bordes de inputs más oscuros */
-    --color-navbar-border: #3A3A3C; /* Borde inferior de la navbar más oscuro */
-    --color-form-bg: #1C1C1E; /* Fondo del formulario oscuro */
-    --color-text-primary: #E5E5EA; /* Color de texto principal claro */
-    --color-text-secondary: #8E8E93; /* Color de texto secundario más oscuro */
+    --color-apple-blue: #007AFF; /* Botones principales */
+    --color-card-bg: #FFFFFF; /* Fondo de tarjetas */
+    --color-red: #FF3B30; /* Rojo vibrante */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-body-bg: #FFFFFF; /* Fondo general de la app */
+    --color-border-subtle: #E5E5EA; /* Bordes de inputs */
+    --color-navbar-border: #E5E5EA; /* Borde inferior de la navbar */
+    --color-form-bg: #FFFFFF; /* Fondo del formulario */
+    --color-text-primary: #000000; /* Texto principal oscuro */
+    --color-text-secondary: #8E8E93; /* Texto secundario gris */
 }
+
+/* Variables de color - Modo Oscuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-gray: #A9A9AE; /* Texto secundario más claro para contraste */
+        --color-apple-blue: #0A84FF; /* Azul de Apple más vibrante para modo oscuro */
+        --color-card-bg: #1C1C1E; /* Fondo de tarjetas oscuro */
+        --color-red: #FF453A; /* Rojo vibrante para modo oscuro */
+        --color-body-bg: #000000; /* Fondo general de la app negro */
+        --color-border-subtle: #3A3A3C; /* Bordes de inputs más oscuros */
+        --color-navbar-border: #3A3A3C; /* Borde inferior de la navbar más oscuro */
+        --color-form-bg: #1C1C1E; /* Fondo del formulario oscuro */
+        --color-text-primary: #E5E5EA; /* Color de texto principal claro */
+        --color-text-secondary: #8E8E93; /* Color de texto secundario más oscuro */
+    }
+}
+
 
 /* Estilos generales */
 * {
@@ -24,7 +41,7 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--color-body-bg); /* Usa la variable de fondo negro */
+    background-color: var(--color-body-bg); /* Usa la variable de fondo */
     margin: 0;
     padding: 0;
     display: flex;
@@ -33,7 +50,7 @@ body {
     /* Ajustes para la "safe area" de iOS */
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
-    color: var(--color-text-primary); /* Texto general claro */
+    color: var(--color-text-primary); /* Texto general */
 }
 
 /* Contenedor principal */
@@ -41,7 +58,7 @@ body {
     width: 100%;
     max-width: 414px;
     height: 100vh;
-    background-color: var(--color-body-bg); /* El fondo del frame también es negro */
+    background-color: var(--color-body-bg); /* El fondo del frame también usa la variable */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -49,7 +66,7 @@ body {
 
 /* Barra de navegación (Header) */
 .navbar {
-    background-color: var(--color-body-bg); /* Fondo de la navbar oscuro */
+    background-color: var(--color-body-bg); /* Fondo de la navbar usa la variable */
     border-bottom: 0.5px solid var(--color-navbar-border); 
     border-radius: 0; 
     
@@ -65,8 +82,16 @@ body {
     z-index: 10;
 
     margin: 0; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en oscuro */
+    /* Sombra condicional para modo claro/oscuro */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
 }
+
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en oscuro */
+    }
+}
+
 
 /* Contenedor del título y logo en la navbar */
 .navbar-title-group {
@@ -80,7 +105,13 @@ body {
     height: auto; 
     margin-right: 8px; 
     transform: translateY(-1px); 
-    filter: invert(1); /* Invierte los colores del logo para que se vea blanco sobre fondo oscuro */
+}
+
+/* Filtro para el logo de Apple en modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .navbar-logo {
+        filter: invert(1); /* Invierte los colores del logo para que se vea blanco sobre fondo oscuro */
+    }
 }
 
 /* Opcional: Ajusta el alineamiento del grupo si es necesario */
@@ -92,7 +123,7 @@ body {
 .navbar h1 {
     font-size: 34px;
     font-weight: 700;
-    color: var(--color-text-primary); /* Título principal claro */
+    color: var(--color-text-primary); /* Título principal */
     margin: 0; 
     line-height: 1.2;
 }
@@ -114,13 +145,20 @@ body {
 }
 
 .add-icon-button:active {
-    background-color: #007AFF; /* Ligeramente más oscuro al presionar */
+    background-color: #005bb5; /* Oscurece al presionar en modo claro */
     transform: scale(0.98);
 }
 
+@media (prefers-color-scheme: dark) {
+    .add-icon-button:active {
+        background-color: #007AFF; /* Oscurece al presionar en modo oscuro */
+    }
+}
+
+
 /* Sección del formulario (desplegable) */
 .input-section {
-    background-color: var(--color-form-bg); /* Fondo del formulario oscuro */
+    background-color: var(--color-form-bg); /* Fondo del formulario */
     display: flex;
     flex-direction: column;
     gap: 16px; 
@@ -131,12 +169,19 @@ body {
 
     margin: 0 16px; 
     border-radius: 30px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    /* Sombra condicional para modo claro/oscuro */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 5;
     
     padding-top: 0;
     padding-bottom: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .input-section {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    }
 }
 
 .input-section.expanded-form {
@@ -154,23 +199,30 @@ body {
     border-radius: 10px;
     font-size: 17px;
     font-weight: 400; 
-    color: var(--color-text-primary); /* Texto del input claro */
-    background-color: var(--color-card-bg); /* Fondo del input oscuro */
+    color: var(--color-text-primary); /* Texto del input */
+    background-color: var(--color-card-bg); /* Fondo del input */
     -webkit-appearance: none;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-field::placeholder {
-    color: var(--color-gray); /* Placeholder más claro */
+    color: var(--color-gray); 
     font-weight: 400; 
 }
 
 .input-field:focus {
     outline: none;
     border-color: var(--color-apple-blue);
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.4); /* Sombra de enfoque más visible */
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); /* Sombra de enfoque modo claro */
 }
+
+@media (prefers-color-scheme: dark) {
+    .input-field:focus {
+        box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.4); /* Sombra de enfoque modo oscuro */
+    }
+}
+
 
 /* Contenedor de botones de fecha y hora */
 .datetime-buttons-container {
@@ -228,7 +280,7 @@ body {
     padding: 18px 16px;
     border: 0.5px solid var(--color-border-subtle);
     border-radius: 10px;
-    background-color: var(--color-card-bg); /* Fondo de botón oscuro */
+    background-color: var(--color-card-bg); /* Fondo de botón */
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     -webkit-appearance: none;
@@ -241,13 +293,26 @@ body {
 }
 
 .datetime-button:active {
-    background-color: #2C2C2E; /* Ligeramente más oscuro al presionar */
+    background-color: #f8f8f8; /* Modo claro al presionar */
     transform: scale(0.98);
 }
 
+@media (prefers-color-scheme: dark) {
+    .datetime-button:active {
+        background-color: #2C2C2E; /* Modo oscuro al presionar */
+    }
+}
+
+
 .datetime-button:focus-within {
     border-color: var(--color-apple-blue);
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.4);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); /* Sombra de enfoque modo claro */
+}
+
+@media (prefers-color-scheme: dark) {
+    .datetime-button:focus-within {
+        box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.4); /* Sombra de enfoque modo oscuro */
+    }
 }
 
 .datetime-button-text {
@@ -259,7 +324,7 @@ body {
 }
 
 .datetime-button.has-value .datetime-button-text {
-    color: var(--color-text-primary); /* Texto de valor claro */
+    color: var(--color-text-primary); 
     font-weight: 500;
 }
 
@@ -280,9 +345,19 @@ body {
 }
 
 .add-task-form-button:active {
-    background-color: #007AFF; /* Ligeramente más oscuro al presionar */
+    background-color: #005bb5; /* Modo claro al presionar */
     transform: scale(0.98);
 }
+
+@media (prefers-color-scheme: dark) {
+    .add-icon-button:active { /* Corrección: Era add-icon-button:active, debería ser add-task-form-button:active */
+        background-color: #007AFF; /* Oscurece al presionar en modo oscuro */
+    }
+    .add-task-form-button:active { /* Añadida regla para el botón del formulario */
+        background-color: #007AFF; /* Oscurece al presionar en modo oscuro */
+    }
+}
+
 
 /* Contenedor de la lista */
 .task-list-wrapper {
@@ -309,12 +384,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--color-card-bg); /* Fondo de tarjeta oscuro */
+    background-color: var(--color-card-bg); /* Fondo de tarjeta */
     padding: 20px;
     border-radius: 30px; 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    /* Sombra condicional para modo claro/oscuro */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); 
     transition: transform 0.2s ease-in-out;
 }
+
+@media (prefers-color-scheme: dark) {
+    .task-item {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    }
+}
+
 
 .task-item:active {
     transform: scale(0.98);
@@ -330,7 +413,7 @@ body {
 .task-item-text {
     font-size: 17px;
     font-weight: 500;
-    color: var(--color-text-primary); /* Texto de tarea claro */
+    color: var(--color-text-primary); /* Texto de tarea */
     margin: 0;
     line-height: 1.3;
     word-break: break-word;
@@ -339,19 +422,18 @@ body {
 .task-item-date {
     font-size: 15px;
     font-weight: 400;
-    color: var(--color-gray); /* Fecha/hora secundaria más clara */
+    color: var(--color-gray); /* Fecha/hora secundaria */
     margin-top: 4px;
 }
 
 /* Botón de eliminación de tarea (Círculo rojo minimalista) */
-/* NOTA: El SVG para el contenido del botón debe ir en el HTML */
 .delete-button {
     background-color: var(--color-red); /* Fondo rojo del botón de eliminar */
     border: none;
     border-radius: 50%;
     width: 24px; /* Tamaño del botón */
     height: 24px;
-    display: flex; /* Para centrar el SVG */
+    display: flex; /* Para centrar el contenido (si lo hubiera, pero ya no SVG) */
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -360,18 +442,26 @@ body {
     -webkit-appearance: none; /* Asegura un estilo consistente */
 }
 
+/* SE HA ELIMINADO ESTA REGLA:
 .delete-button svg {
-    /* Estilos para el SVG dentro del botón */
-    display: block; /* Asegura que el SVG se muestre */
-    fill: var(--color-white); /* Color del icono SVG dentro del botón, para que se vea blanco */
-    width: 14px; /* Tamaño del icono SVG */
+    display: block;
+    fill: var(--color-white);
+    width: 14px;
     height: 14px;
 }
+*/
 
 .delete-button:active {
-    background-color: #CC302A; /* Rojo más oscuro al presionar */
+    background-color: #CC302A; /* Rojo más oscuro al presionar en modo claro */
     transform: scale(0.9);
 }
+
+@media (prefers-color-scheme: dark) {
+    .delete-button:active {
+        background-color: #C13931; /* Rojo más oscuro al presionar en modo oscuro */
+    }
+}
+
 
 /* Cuadro de mensaje temporal */
 .message-box {
@@ -379,8 +469,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9); /* Fondo más claro para el modo oscuro */
-    color: var(--color-black); /* Texto oscuro para el mensaje */
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro para el mensaje en modo claro */
+    color: var(--color-white); /* Texto blanco para el mensaje en modo claro */
     padding: 15px 25px;
     border-radius: 10px;
     font-size: 16px;
@@ -389,13 +479,17 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
 }
 
-.message-box.show {
-    opacity: 1;
-    visibility: visible;
+@media (prefers-color-scheme: dark) {
+    .message-box {
+        background-color: rgba(255, 255, 255, 0.9); /* Fondo claro para el mensaje en modo oscuro */
+        color: var(--color-black); /* Texto oscuro para el mensaje en modo oscuro */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
 }
+
 
 /* Scrollbar personalizada para webkit (para navegador, no se ve en iOS nativo) */
 .task-list-wrapper::-webkit-scrollbar {
@@ -407,13 +501,26 @@ body {
 }
 
 .task-list-wrapper::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2); /* Scrollbar claro para modo oscuro */
+    background: rgba(0, 0, 0, 0.2); /* Scrollbar oscuro en modo claro */
     border-radius: 2px;
 }
 
-.task-list-wrapper::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+@media (prefers-color-scheme: dark) {
+    .task-list-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2); /* Scrollbar claro en modo oscuro */
+    }
 }
+
+.task-list-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3); /* Hover oscuro en modo claro */
+}
+
+@media (prefers-color-scheme: dark) {
+    .task-list-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3); /* Hover claro en modo oscuro */
+    }
+}
+
 
 /* Estilos adicionales para mejorar la compatibilidad con iOS/Safari */
 @supports (-webkit-touch-callout: none) {
